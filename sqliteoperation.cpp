@@ -1,0 +1,124 @@
+#include "sqliteoperation.h"
+
+#include <QDebug>
+
+SqliteOperation::SqliteOperation()
+{
+
+}
+
+void SqliteOperation::openDB()
+{
+    m_sqlDB = QSqlDatabase::addDatabase("QSQLITE");
+    m_sqlDB.setDatabaseName("FileManager.db");
+    if(!m_sqlDB.open())
+    {
+        qDebug() << "open database fails!" << m_sqlDB.lastError();
+    }
+
+    // 在sql语句中判断表是否存在。
+    // 如果没有表filewithlabels和alllabels，则创建这两个表
+    createTable();
+}
+
+void SqliteOperation::createTable()
+{
+    QSqlQuery query(m_sqlDB);
+    QString sSql = R"(
+                      CREATE TABLE IF NOT EXISTS  filewithlabels (
+                      id   INTEGER   PRIMARY KEY AUTOINCREMENT NOT NULL,
+                      filepath CHAR (260) NOT NULL,
+                      label   TEXT (1024) NOT NULL)
+                      )";
+    if(!query.exec(sSql))
+    {
+        qDebug()<<"create table error"<<query.lastError();
+    }
+
+    sSql = R"(
+              CREATE TABLE IF NOT EXISTS  alllabels (
+              label   TEXT (1024) UNIQUE NOT NULL)
+              )";
+    if(!query.exec(sSql))
+    {
+        qDebug()<<"create table error"<<query.lastError();
+    }
+}
+
+void SqliteOperation::insertRecord(const QString &path, QString labels)
+{
+    QSqlQuery query(m_sqlDB);
+    QString sSql = QString("INSERT INTO filewithlabels(filepath,label) VALUES('%1','%2')")
+                   .arg(path).arg(labels);
+    bool bRet = query.exec(sSql);
+    if(!bRet)
+    {
+        qDebug()<<"插入数据失败！";
+    }
+
+    sSql = QString("INSERT INTO alllabels(label) VALUES('%1')")
+           .arg(labels);
+    bRet = query.exec(sSql);
+    if(!bRet)
+    {
+    }
+}
+
+void SqliteOperation::deleteRecord(const QString &sFilePath, const QString &sLabel)
+{
+    QSqlQuery query(m_sqlDB);
+    QString sSql = QString("DELETE FROM filewithlabels WHERE filepath='%1' and label='%2'")
+                   .arg(sFilePath).arg(sLabel);
+    bool bRet = query.exec(sSql);
+    if(!bRet)
+    {
+        qDebug()<<"删除数据失败！";
+    }
+
+    sSql = QString("DELETE FROM alllabels WHERE label='%2'")
+           .arg(sLabel);
+    bRet = query.exec(sSql);
+    if(!bRet)
+    {
+        qDebug()<<"删除数据失败！";
+    }
+}
+
+void SqliteOperation::update(QString sOldLable, QString sNewLable, QString sFilePath)
+{
+    QSqlQuery query(m_sqlDB);
+    QString sSql = QString("update filewithlabels set label='%1' where filepath='%2' and label='%3'")
+                            .arg(sNewLable).arg(sFilePath).arg(sOldLable);
+    query.exec(sSql);
+}
+
+QStringList SqliteOperation::getLabelsByFile(const QString &sFilePath)
+{
+    QSqlQuery query(m_sqlDB);
+    query.exec(QString("SELECT label FROM filewithlabels WHERE filepath='%1'")
+               .arg(sFilePath));
+
+    QStringList qLLables;
+    QString sLabel;
+    while(query.next())
+    {
+        sLabel = query.value(0).toString();
+        qLLables << sLabel;
+    }
+    return qLLables;
+}
+
+QVector<QString> SqliteOperation::getAllLabels()
+{
+    QSqlQuery query(m_sqlDB);
+    query.exec(QString("SELECT label FROM alllabels"));
+
+    QVector<QString> qLAllLables;
+    QString sLabel;
+    while(query.next())
+    {
+        sLabel = query.value(0).toString();
+        qLAllLables << sLabel;
+    }
+    return qLAllLables;
+}
