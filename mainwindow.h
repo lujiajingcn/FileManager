@@ -39,7 +39,7 @@ private slots:
     void on_lvLabels_customContextMenuRequested(const QPoint &pos);
 
     // 添加标签
-    void onAddLabel();
+    void onAddLabel(bool bIsDir = false);
 
     // 删除标签
     void onDelLabel();

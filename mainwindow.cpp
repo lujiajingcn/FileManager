@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
     initLabelList();
     initAllLabelList();
 
-    connect(m_fileBrowser, SIGNAL(sigAddLabels()), this, SLOT(onAddLabel()));
+    connect(m_fileBrowser, SIGNAL(sigAddLabels(bool)), this, SLOT(onAddLabel(bool)));
     connect(m_fileBrowser, SIGNAL(sigClickFile(QStringList)), this, SLOT(onClickFile(QStringList)));
 }
 
@@ -74,18 +74,17 @@ void MainWindow::onClickFile(QStringList qLLabels)
 void MainWindow::on_lvLabels_customContextMenuRequested(const QPoint& pos)
 {
     QMenu *cmenu = new QMenu(m_tvLabels);
-    QAction *addLabelAction = cmenu->addAction("添加");
     QAction *delLabelAction = cmenu->addAction("删除");
-    connect(addLabelAction, SIGNAL(triggered(bool)), this, SLOT(onAddLabel()));
     connect(delLabelAction, SIGNAL(triggered(bool)), this, SLOT(onDelLabel()));
     //在当前鼠标位置显示
     cmenu->exec(QCursor::pos());
 }
 
-void MainWindow::onAddLabel()
+void MainWindow::onAddLabel(bool bIsDir)
 {
     QVector<QString> vtAllLabels = m_sqlOperation.getAllLabels();
     DlgLabel dlg(this);
+    dlg.setIsDir(bIsDir);
     dlg.setAllLabels(vtAllLabels);
     if(QDialog::Accepted == dlg.exec())
     {
@@ -102,22 +101,29 @@ void MainWindow::onAddLabel()
             }
         }
 
-        // QTreeView 会默认选中第一个根节点
-        QString sFilePath = m_fileBrowser->getCurPath();
-        if(sFilePath.isEmpty())
+        if(bIsDir)
         {
-            qDebug()<<"未选中文件！";
-            return;
+            bool bIsSetAllFiles = dlg.isSetAllFiles();
         }
-        m_sqlOperation.insertRecord(sFilePath, sLabel);
-
-        QStandardItem* item = new QStandardItem(sLabel);
-        m_modelLabels->appendRow(item);
-
-        if(!m_vtAllLabels.contains(sLabel))
+        else
         {
-            m_vtAllLabels.push_back(sLabel);
-            updateAllLabelList();
+            // QTreeView 会默认选中第一个根节点
+            QString sFilePath = m_fileBrowser->getCurPath();
+            if(sFilePath.isEmpty())
+            {
+                qDebug()<<"未选中文件！";
+                return;
+            }
+            m_sqlOperation.insertRecord(sFilePath, sLabel);
+
+            QStandardItem* item = new QStandardItem(sLabel);
+            m_modelLabels->appendRow(item);
+
+            if(!m_vtAllLabels.contains(sLabel))
+            {
+                m_vtAllLabels.push_back(sLabel);
+                updateAllLabelList();
+            }
         }
     }
 }

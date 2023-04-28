@@ -17,10 +17,14 @@ public:
     explicit DlgLabel(QWidget *parent = nullptr);
     ~DlgLabel();
 
+    void setIsDir(bool bIsDir);
     void setAllLabels(QVector<QString> vtAllLabels);
 
     void setLabel(QString sLabel);
     QString getLabel();
+
+    // 设置当前文件夹和文件夹中的全部文件，还是只是设置当前文件夹
+    bool isSetAllFiles();
 
 private slots:
     void on_btnOk_clicked();

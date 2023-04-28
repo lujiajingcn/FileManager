@@ -20,6 +20,14 @@ DlgLabel::~DlgLabel()
     delete ui;
 }
 
+void DlgLabel::setIsDir(bool bIsDir)
+{
+    if(!bIsDir)
+    {
+        ui->cbSetAllFiles->hide();
+    }
+}
+
 void DlgLabel::setAllLabels(QVector<QString> vtAllLabels)
 {
     m_modelAllLabels->removeRows(0, m_modelAllLabels->rowCount());
@@ -39,6 +47,11 @@ void DlgLabel::setLabel(QString sLabel)
 QString DlgLabel::getLabel()
 {
     return m_sLabel;
+}
+
+bool DlgLabel::isSetAllFiles()
+{
+    return ui->cbSetAllFiles->checkState() == Qt::Checked ? true : false;
 }
 
 void DlgLabel::on_btnOk_clicked()

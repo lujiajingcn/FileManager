@@ -55,7 +55,7 @@ public:
     void updateToolButtons();
 
 signals:
-    void sigAddLabels();
+    void sigAddLabels(bool bIsDir);
     void sigClickFile(QStringList sLabels);
 
 public slots:

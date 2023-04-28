@@ -49,7 +49,11 @@ void FileBrowser::createMenuActions()
 
 void FileBrowser::onAddLabel()
 {
-    emit sigAddLabels();
+    QModelIndex index = m_tvFiles->currentIndex();
+    bool bIsDir = m_modelFiles->isDir(index);
+    qDebug()<<bIsDir;
+
+    emit sigAddLabels(bIsDir);
 }
 
 void FileBrowser::initNavigation()
