@@ -45,7 +45,7 @@ public:
     // 如果返回值为空，表示未选中文件
     QString getCurPath();
 
-    void setSqliteOperation(SqliteOperation sqlilteOperation);
+    void setSqliteOperation(SqliteOperation *sqlilteOperation);
 
     void filterFile(QString sLabel);
     void filterFile(QVector<QString> vtLabels, bool isAnd);
@@ -92,7 +92,7 @@ private slots:
     void on_tvFilteredFiles_clicked(const QModelIndex &index);
 
 private:
-    SqliteOperation         m_sqlOperation;         // 操作sqlite数据库
+    SqliteOperation         *m_sqlOperation;         // 操作sqlite数据库
 
     QTreeView               *m_tvNavigation;        // 左侧导航栏
     QFileSystemModel        *m_modelNavigation;

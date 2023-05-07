@@ -56,7 +56,7 @@ private slots:
     void on_actionsearchbylabels_triggered();
 
 private:
-    SqliteOperation         m_sqlOperation;         // 操作sqlite数据库
+    SqliteOperation         *m_sqlOperation;         // 操作sqlite数据库
 
     FileBrowser             *m_fileBrowser;         // 文件操作
 

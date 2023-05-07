@@ -11,6 +11,7 @@ class SqliteOperation
 {
 public:
     SqliteOperation();
+    ~SqliteOperation();
 
     void openDB();
     void createTable();
@@ -19,6 +20,10 @@ public:
     void update(QString sOldLable, QString sNewLable, QString sFilePath);
     QStringList getLabelsByFile(const QString &sFilePath);
     QVector<QString> getAllLabels();
+
+    bool addLabel(QString sLabel);
+    bool delLabel(QString sLabel);
+    bool modLabel(QString sOldLabel, QString sNewLabel);
 
 public:
     QSqlDatabase    m_sqlDB;

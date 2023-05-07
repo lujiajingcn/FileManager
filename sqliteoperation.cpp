@@ -7,6 +7,11 @@ SqliteOperation::SqliteOperation()
 
 }
 
+SqliteOperation::~SqliteOperation()
+{
+    m_sqlDB.close();
+}
+
 void SqliteOperation::openDB()
 {
     m_sqlDB = QSqlDatabase::addDatabase("QSQLITE");
@@ -121,4 +126,43 @@ QVector<QString> SqliteOperation::getAllLabels()
         qLAllLables << sLabel;
     }
     return qLAllLables;
+}
+
+bool SqliteOperation::addLabel(QString sLabel)
+{
+    QSqlQuery query(m_sqlDB);
+    QString sSql = QString("INSERT INTO alllabels(label) VALUES('%1')")
+           .arg(sLabel);
+    int bRet = query.exec(sSql);
+    if(!bRet)
+    {
+        return false;
+    }
+    return true;
+}
+
+bool SqliteOperation::delLabel(QString sLabel)
+{
+    QSqlQuery query(m_sqlDB);
+    QString sSql = QString("DELETE FROM alllabels WHERE label='%1'")
+           .arg(sLabel);
+    int bRet = query.exec(sSql);
+    if(!bRet)
+    {
+        return false;
+    }
+    return true;
+}
+
+bool SqliteOperation::modLabel(QString sOldLabel, QString sNewLabel)
+{
+    QSqlQuery query(m_sqlDB);
+    QString sSql = QString("update alllabels set label='%1' WHERE label='%2'")
+           .arg(sNewLabel).arg(sOldLabel);
+    int bRet = query.exec(sSql);
+    if(!bRet)
+    {
+        return false;
+    }
+    return true;
 }

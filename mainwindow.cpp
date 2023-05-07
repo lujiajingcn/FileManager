@@ -11,7 +11,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_sqlOperation.openDB();
+    m_sqlOperation = new SqliteOperation;
+    m_sqlOperation->openDB();
     m_fileBrowser = new FileBrowser(ui->widget);
     m_fileBrowser->setSqliteOperation(m_sqlOperation);
 
@@ -46,7 +47,7 @@ void MainWindow::initAllLabelList()
 
     m_lvAllLabels->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    m_vtAllLabels = m_sqlOperation.getAllLabels();
+    m_vtAllLabels = m_sqlOperation->getAllLabels();
     updateAllLabelList();
 }
 
@@ -82,24 +83,27 @@ void MainWindow::on_lvLabels_customContextMenuRequested(const QPoint& pos)
 
 void MainWindow::onAddLabel(bool bIsDir)
 {
-    QVector<QString> vtAllLabels = m_sqlOperation.getAllLabels();
+    QStringList qLLabels = m_sqlOperation->getLabelsByFile(m_fileBrowser->getCurPath());
+    QVector<QString> vtAllLabels = m_sqlOperation->getAllLabels();
     DlgLabel dlg(this);
+    dlg.setSqlOperation(m_sqlOperation);
     dlg.setIsDir(bIsDir);
     dlg.setAllLabels(vtAllLabels);
+    dlg.setSelLabels(qLLabels);
     if(QDialog::Accepted == dlg.exec())
     {
-        QString sLabel = dlg.getLabel();
+        QStringList sLabels = dlg.getLabels();
 
-        // 判断标签是否重复
-        int nRowCount = m_modelLabels->rowCount();
-        for(int i = 0; i < nRowCount; i++)
-        {
-            if(QString::compare(sLabel, m_modelLabels->item(i)->text()) == 0)
-            {
-                qDebug()<<"标签重复！";
-                return;
-            }
-        }
+//        // 判断标签是否重复
+//        int nRowCount = m_modelLabels->rowCount();
+//        for(int i = 0; i < nRowCount; i++)
+//        {
+//            if(QString::compare(sLabel, m_modelLabels->item(i)->text()) == 0)
+//            {
+//                qDebug()<<"标签重复！";
+//                return;
+//            }
+//        }
 
         if(bIsDir)
         {
@@ -114,15 +118,23 @@ void MainWindow::onAddLabel(bool bIsDir)
                 qDebug()<<"未选中文件！";
                 return;
             }
-            m_sqlOperation.insertRecord(sFilePath, sLabel);
 
-            QStandardItem* item = new QStandardItem(sLabel);
-            m_modelLabels->appendRow(item);
-
-            if(!m_vtAllLabels.contains(sLabel))
+            m_modelLabels->removeRows(0, m_modelLabels->rowCount());
+            QString sLabel;
+            QStandardItem* item = nullptr;
+            for (int i = 0; i < sLabels.count(); i++)
             {
-                m_vtAllLabels.push_back(sLabel);
-                updateAllLabelList();
+                sLabel = sLabels.at(i);
+                m_sqlOperation->insertRecord(sFilePath, sLabel);
+
+                item = new QStandardItem(sLabel);
+                m_modelLabels->appendRow(item);
+
+                if(!m_vtAllLabels.contains(sLabel))
+                {
+                    m_vtAllLabels.push_back(sLabel);
+                    updateAllLabelList();
+                }
             }
         }
     }
@@ -134,7 +146,7 @@ void MainWindow::onDelLabel()
     QString sLable = m_modelLabels->item(nRow)->text();
 
     QString sFilePath = m_fileBrowser->getCurPath();
-    m_sqlOperation.deleteRecord(sFilePath, sLable);
+    m_sqlOperation->deleteRecord(sFilePath, sLable);
 
     m_modelLabels->removeRow(nRow);
 
@@ -153,8 +165,8 @@ void MainWindow::onModifyLabel(QModelIndex index1, QModelIndex index2, QVector<i
     QModelIndex curLabelIndex = m_tvLabels->currentIndex();
     QString sLabel = m_modelLabels->item(curLabelIndex.row())->text();
 
-    m_sqlOperation.deleteRecord(sFilePath, m_sCurLabel);
-    m_sqlOperation.insertRecord(sFilePath, sLabel);
+    m_sqlOperation->deleteRecord(sFilePath, m_sCurLabel);
+    m_sqlOperation->insertRecord(sFilePath, sLabel);
 }
 
 void MainWindow::on_lvAllLabels_clicked(const QModelIndex &index)
@@ -171,7 +183,7 @@ void MainWindow::on_lvLabels_clicked(const QModelIndex &index)
 void MainWindow::on_actionsearchbylabels_triggered()
 {
     DlgSearchByLabels dlg(this);
-    dlg.setAllLabels(m_sqlOperation.getAllLabels());
+    dlg.setAllLabels(m_sqlOperation->getAllLabels());
     dlg.initAllLabelList();
     if(QDialog::Accepted == dlg.exec())
     {

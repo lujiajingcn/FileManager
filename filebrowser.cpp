@@ -244,7 +244,7 @@ QString FileBrowser::getCurPath()
     return sCurPath;
 }
 
-void FileBrowser::setSqliteOperation(SqliteOperation sqlilteOperation)
+void FileBrowser::setSqliteOperation(SqliteOperation *sqlilteOperation)
 {
     m_sqlOperation = sqlilteOperation;
 }
@@ -299,7 +299,7 @@ void FileBrowser::updateFilterFile(QString sSql)
 {
     ui->stackedWidget->setCurrentWidget(ui->pageFilteredFiles);
 
-    QSqlQuery query(m_sqlOperation.m_sqlDB);
+    QSqlQuery query(m_sqlOperation->m_sqlDB);
     query.exec(sSql);
     QStringList qLFilePaths;
     while(query.next())
@@ -319,7 +319,7 @@ void FileBrowser::updateFilterFile(QString sSql)
 void FileBrowser::on_tvFiles_clicked(const QModelIndex &index)
 {
     QString sFilePath = m_modelFiles->filePath(index);
-    QStringList qLLabels = m_sqlOperation.getLabelsByFile(sFilePath);
+    QStringList qLLabels = m_sqlOperation->getLabelsByFile(sFilePath);
     emit sigClickFile(qLLabels);
 }
 
@@ -357,6 +357,6 @@ void FileBrowser::on_tvFilteredFiles_customContextMenuRequested(const QPoint &po
 void FileBrowser::on_tvFilteredFiles_clicked(const QModelIndex &index)
 {
     QString sFilePath = m_modelFilteredFiles->item(index.row())->text();
-    QStringList qLLabels = m_sqlOperation.getLabelsByFile(sFilePath);
+    QStringList qLLabels = m_sqlOperation->getLabelsByFile(sFilePath);
     emit sigClickFile(qLLabels);
 }
