@@ -134,11 +134,11 @@ void MainWindow::onAddLabel(bool bIsDir)
                 item = new QStandardItem(sLabel);
                 m_modelAllLabels->appendRow(item);
 
-                if(!m_vtAllLabels.contains(sLabel))
-                {
-                    m_vtAllLabels.push_back(sLabel);
-                    updateAllLabelList();
-                }
+//                if(!m_vtAllLabels.contains(sLabel))
+//                {
+//                    m_vtAllLabels.push_back(sLabel);
+//                    updateAllLabelList();
+//                }
             }
 
             for (int i = 0; i < sLabels.count(); i++)
