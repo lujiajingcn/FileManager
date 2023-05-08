@@ -120,6 +120,7 @@ void MainWindow::onAddLabel(bool bIsDir)
             }
 
             m_modelLabels->removeRows(0, m_modelLabels->rowCount());
+            m_sqlOperation->clearLabels(sFilePath);
             QString sLabel;
             QStandardItem* item = nullptr;
             for (int i = 0; i < sLabels.count(); i++)

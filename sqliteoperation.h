@@ -15,6 +15,7 @@ public:
 
     void openDB();
     void createTable();
+    void clearLabels(const QString &sFilePath);
     void insertRecord(const QString &sFilePath, QString labels);
     void deleteRecord(const QString &sFilePath, const QString &sLabel);
     void update(QString sOldLable, QString sNewLable, QString sFilePath);

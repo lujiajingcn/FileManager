@@ -50,6 +50,18 @@ void SqliteOperation::createTable()
     }
 }
 
+void SqliteOperation::clearLabels(const QString &sFilePath)
+{
+    QSqlQuery query(m_sqlDB);
+    QString sSql = QString("DELETE FROM filewithlabels WHERE filepath='%1'")
+                   .arg(sFilePath);
+    bool bRet = query.exec(sSql);
+    if(!bRet)
+    {
+        qDebug()<<"删除数据失败！";
+    }
+}
+
 void SqliteOperation::insertRecord(const QString &path, QString labels)
 {
     QSqlQuery query(m_sqlDB);

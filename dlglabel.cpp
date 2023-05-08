@@ -176,7 +176,7 @@ void DlgLabel::on_btnAddLable_clicked()
     item->setText(sLabel);
     m_modelAllLabels->appendRow(item);
 
-    m_sqlOperation->addLabel(sLabel);
+//    m_sqlOperation->addLabel(sLabel);
 }
 
 void DlgLabel::on_btnDelLabel_clicked()
@@ -190,7 +190,7 @@ void DlgLabel::on_btnDelLabel_clicked()
     QString sLabel = m_modelAllLabels->item(curIndex.row())->text();
     m_modelAllLabels->removeRow(curIndex.row());
 
-    m_sqlOperation->delLabel(sLabel);
+//    m_sqlOperation->delLabel(sLabel);
 }
 
 void DlgLabel::on_btnModLabel_clicked()
@@ -209,5 +209,5 @@ void DlgLabel::on_btnModLabel_clicked()
     QString sOldLabel = item->text();
     item->setText(sNewLabel);
 
-    m_sqlOperation->modLabel(sOldLabel, sNewLabel);
+//    m_sqlOperation->modLabel(sOldLabel, sNewLabel);
 }
