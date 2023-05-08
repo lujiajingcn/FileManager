@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>添加标签</string>
+   <string>设置标签</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_9">
    <item row="0" column="0">

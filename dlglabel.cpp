@@ -67,6 +67,11 @@ QStringList DlgLabel::getLabels()
     return m_sLabels;
 }
 
+QStringList DlgLabel::getAllLabels()
+{
+    return m_sAllLabels;
+}
+
 bool DlgLabel::isSetAllFiles()
 {
     return ui->cbSetAllFiles->checkState() == Qt::Checked ? true : false;
@@ -79,10 +84,17 @@ void DlgLabel::setSqlOperation(SqliteOperation *sqlOperation)
 
 void DlgLabel::on_btnOk_clicked()
 {
-    int nRowCount = m_modelSelLabels->rowCount();
+    int nRowCount = m_modelAllLabels->rowCount();
+    for (int i = 0; i < nRowCount; i++)
+    {
+        m_sAllLabels << m_modelAllLabels->item(i)->text();
+    }
+
+    nRowCount = m_modelSelLabels->rowCount();
     for (int i = 0; i < nRowCount; i++)
     {
         m_sLabels << m_modelSelLabels->item(i)->text();
+        m_sAllLabels << m_modelSelLabels->item(i)->text();
     }
     accept();
 }

@@ -65,19 +65,30 @@ void SqliteOperation::clearLabels(const QString &sFilePath)
 void SqliteOperation::insertRecord(const QString &path, QString labels)
 {
     QSqlQuery query(m_sqlDB);
-    QString sSql = QString("INSERT INTO filewithlabels(filepath,label) VALUES('%1','%2')")
+    QString sSql = QString("INSERT INTO filewithlabels (filepath,label) VALUES('%1','%2')")
                    .arg(path).arg(labels);
+//    QString sSql = QString("INSERT INTO filewithlabels(filepath, label)"
+//                           "SELECT '%1', '%2' FROM dual WHERE not exists (select * from filewithlabels where filewithlabels.filepath = '%3' and filewithlabels.label = '%4')")
+//                   .arg(path).arg(labels).arg(path).arg(labels);
+//    QString sSql = QString("INSERT INTO filewithlabels(filepath, label) "
+//                           "SELECT '%1', '%2' FROM filewithlabels WHERE not exists (select * from filewithlabels where filewithlabels.filepath = '%3' and filewithlabels.label = '%4')")
+//                   .arg(path).arg(labels).arg(path).arg(labels);
     bool bRet = query.exec(sSql);
     if(!bRet)
     {
         qDebug()<<"插入数据失败！";
     }
+}
 
-    sSql = QString("INSERT INTO alllabels(label) VALUES('%1')")
-           .arg(labels);
-    bRet = query.exec(sSql);
+void SqliteOperation::insertAllLabel(const QString sLabel)
+{
+    QSqlQuery query(m_sqlDB);
+    QString sSql = QString("INSERT INTO alllabels (label) VALUES('%1')")
+                   .arg(sLabel);
+    bool bRet = query.exec(sSql);
     if(!bRet)
     {
+//        qDebug()<<"插入数据失败！";
     }
 }
 

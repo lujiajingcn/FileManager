@@ -93,6 +93,7 @@ void MainWindow::onAddLabel(bool bIsDir)
     if(QDialog::Accepted == dlg.exec())
     {
         QStringList sLabels = dlg.getLabels();
+        QStringList sAllLabels = dlg.getAllLabels();
 
 //        // 判断标签是否重复
 //        int nRowCount = m_modelLabels->rowCount();
@@ -120,9 +121,26 @@ void MainWindow::onAddLabel(bool bIsDir)
             }
 
             m_modelLabels->removeRows(0, m_modelLabels->rowCount());
+            m_modelAllLabels->removeRows(0, m_modelAllLabels->rowCount());
             m_sqlOperation->clearLabels(sFilePath);
             QString sLabel;
             QStandardItem* item = nullptr;
+
+            for (int i = 0; i < sAllLabels.count(); i++)
+            {
+                sLabel = sAllLabels.at(i);
+                m_sqlOperation->insertAllLabel(sLabel);
+
+                item = new QStandardItem(sLabel);
+                m_modelAllLabels->appendRow(item);
+
+                if(!m_vtAllLabels.contains(sLabel))
+                {
+                    m_vtAllLabels.push_back(sLabel);
+                    updateAllLabelList();
+                }
+            }
+
             for (int i = 0; i < sLabels.count(); i++)
             {
                 sLabel = sLabels.at(i);
@@ -130,12 +148,6 @@ void MainWindow::onAddLabel(bool bIsDir)
 
                 item = new QStandardItem(sLabel);
                 m_modelLabels->appendRow(item);
-
-                if(!m_vtAllLabels.contains(sLabel))
-                {
-                    m_vtAllLabels.push_back(sLabel);
-                    updateAllLabelList();
-                }
             }
         }
     }

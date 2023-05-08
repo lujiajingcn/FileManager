@@ -25,6 +25,8 @@ public:
     void setLabel(QString sLabel);
     QStringList getLabels();
 
+    QStringList getAllLabels();
+
     // 设置当前文件夹和文件夹中的全部文件，还是只是设置当前文件夹
     bool isSetAllFiles();
 
@@ -55,6 +57,7 @@ private:
     bool isItemExist(QStandardItemModel *model, QString sText);
 
 private:
+    QStringList             m_sAllLabels;
     QStringList             m_sLabels;
 
     QListView               *m_lvAllLabels;         // 所有标签列表

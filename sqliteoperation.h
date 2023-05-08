@@ -17,6 +17,7 @@ public:
     void createTable();
     void clearLabels(const QString &sFilePath);
     void insertRecord(const QString &sFilePath, QString labels);
+    void insertAllLabel(const QString sLabel);
     void deleteRecord(const QString &sFilePath, const QString &sLabel);
     void update(QString sOldLable, QString sNewLable, QString sFilePath);
     QStringList getLabelsByFile(const QString &sFilePath);

@@ -41,7 +41,7 @@ void FileBrowser::createToolButtons()
 
 void FileBrowser::createMenuActions()
 {
-    m_addLabelAction = new QAction("添加标签", this);
+    m_addLabelAction = new QAction("设置标签", this);
     connect(m_addLabelAction, SIGNAL(triggered()), this, SLOT(onAddLabel()));
 
     m_gotoFilePath = new QAction("打开文件所在位置", this);
