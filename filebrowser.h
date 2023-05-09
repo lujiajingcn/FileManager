@@ -45,6 +45,8 @@ public:
     // 如果返回值为空，表示未选中文件
     QString getCurPath();
 
+    void getSelFilePath(QStringList &selFilePath);
+
     void setSqliteOperation(SqliteOperation *sqlilteOperation);
 
     void filterFile(QString sLabel);
@@ -53,6 +55,8 @@ public:
 
     bool event(QEvent *event);
     void updateToolButtons();
+
+    void getFilesInCurDir(QVector<QString> &vtFilePath);
 
 signals:
     void sigAddLabels(bool bIsDir);

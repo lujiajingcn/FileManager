@@ -82,6 +82,7 @@ void FileBrowser::initNavigation()
 void FileBrowser::initFileList()
 {
     m_tvFiles = ui->tvFiles;
+    m_tvFiles->setSelectionMode(QAbstractItemView::ExtendedSelection); // 设置可以选中多行
     m_modelFiles = new MyQFileSystemModel;
     m_tvFiles->setModel(m_modelFiles);
 
@@ -172,6 +173,11 @@ void FileBrowser::updateToolButtons()
         ui->toParentButton->setEnabled(true);
 }
 
+void FileBrowser::getFilesInCurDir(QVector<QString> &vtFilePath)
+{
+
+}
+
 void FileBrowser::navigateBackward()
 {
     QString sDir = m_skBackward.pop();
@@ -242,6 +248,16 @@ QString FileBrowser::getCurPath()
 
     }
     return sCurPath;
+}
+
+void FileBrowser::getSelFilePath(QStringList &selFilePath)
+{
+    QModelIndexList selected = m_tvFiles->selectionModel()->selectedRows();
+    QString sSelect;
+    for (QModelIndexList::const_iterator cit = selected.begin(); cit != selected.end(); ++cit)
+    {
+        selFilePath << m_modelFiles->filePath(*cit);
+    }
 }
 
 void FileBrowser::setSqliteOperation(SqliteOperation *sqlilteOperation)
@@ -318,8 +334,18 @@ void FileBrowser::updateFilterFile(QString sSql)
 
 void FileBrowser::on_tvFiles_clicked(const QModelIndex &index)
 {
-    QString sFilePath = m_modelFiles->filePath(index);
-    QStringList qLLabels = m_sqlOperation->getLabelsByFile(sFilePath);
+    QStringList qLLabels;
+    QModelIndexList selected = m_tvFiles->selectionModel()->selectedRows();
+    if(selected.count() > 1)
+    {
+
+    }
+    else
+    {
+        QString sFilePath = m_modelFiles->filePath(index);
+        qLLabels = m_sqlOperation->getLabelsByFile(sFilePath);
+    }
+
     emit sigClickFile(qLLabels);
 }
 

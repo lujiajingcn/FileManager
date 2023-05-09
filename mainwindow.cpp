@@ -83,7 +83,13 @@ void MainWindow::on_lvLabels_customContextMenuRequested(const QPoint& pos)
 
 void MainWindow::onAddLabel(bool bIsDir)
 {
-    QStringList qLLabels = m_sqlOperation->getLabelsByFile(m_fileBrowser->getCurPath());
+    QStringList qLLabels;
+    QStringList selFilePath;
+    m_fileBrowser->getSelFilePath(selFilePath);
+    if(selFilePath.count() == 1)
+    {
+        qLLabels = m_sqlOperation->getLabelsByFile(m_fileBrowser->getCurPath());
+    }
     QVector<QString> vtAllLabels = m_sqlOperation->getAllLabels();
     DlgLabel dlg(this);
     dlg.setSqlOperation(m_sqlOperation);
@@ -113,16 +119,14 @@ void MainWindow::onAddLabel(bool bIsDir)
         else
         {
             // QTreeView 会默认选中第一个根节点
-            QString sFilePath = m_fileBrowser->getCurPath();
-            if(sFilePath.isEmpty())
-            {
-                qDebug()<<"未选中文件！";
-                return;
-            }
+//            QString sFilePath = m_fileBrowser->getCurPath();
+//            if(sFilePath.isEmpty())
+//            {
+//                qDebug()<<"未选中文件！";
+//                return;
+//            }
 
-            m_modelLabels->removeRows(0, m_modelLabels->rowCount());
             m_modelAllLabels->removeRows(0, m_modelAllLabels->rowCount());
-            m_sqlOperation->clearLabels(sFilePath);
             QString sLabel;
             QStandardItem* item = nullptr;
 
@@ -141,13 +145,20 @@ void MainWindow::onAddLabel(bool bIsDir)
 //                }
             }
 
-            for (int i = 0; i < sLabels.count(); i++)
+            int nFileCount = selFilePath.count();
+            for(int nFileNum = 0; nFileNum < nFileCount; nFileNum++)
             {
-                sLabel = sLabels.at(i);
-                m_sqlOperation->insertRecord(sFilePath, sLabel);
+                // todo 待优化
+                m_modelLabels->removeRows(0, m_modelLabels->rowCount());
+                m_sqlOperation->clearLabels(selFilePath.at(nFileNum));
+                for (int i = 0; i < sLabels.count(); i++)
+                {
+                    sLabel = sLabels.at(i);
+                    m_sqlOperation->insertRecord(selFilePath.at(nFileNum), sLabel);
 
-                item = new QStandardItem(sLabel);
-                m_modelLabels->appendRow(item);
+                    item = new QStandardItem(sLabel);
+                    m_modelLabels->appendRow(item);
+                }
             }
         }
     }
