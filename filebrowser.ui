@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FileBrowser</class>
+ <widget class="QWidget" name="FileBrowser">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>572</width>
+    <height>405</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="1,10">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <layout class="QGridLayout" name="gridLayout_2" columnstretch="2,0,0,0">
+     <item row="0" column="2">
+      <widget class="QToolButton" name="forwardButton">
+       <property name="toolTip">
+        <string>Forward</string>
+       </property>
+       <property name="accessibleName">
+        <string>Forward</string>
+       </property>
+       <property name="accessibleDescription">
+        <string>Go forward</string>
+       </property>
+       <property name="shortcut">
+        <string>Alt+Right</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QToolButton" name="toParentButton">
+       <property name="toolTip">
+        <string>Parent Directory</string>
+       </property>
+       <property name="accessibleName">
+        <string>Parent Directory</string>
+       </property>
+       <property name="accessibleDescription">
+        <string>Go to the parent directory</string>
+       </property>
+       <property name="shortcut">
+        <string>Alt+Up</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QComboBox" name="lookInCombo">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>30</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="editable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QToolButton" name="backButton">
+       <property name="toolTip">
+        <string>Back</string>
+       </property>
+       <property name="accessibleName">
+        <string>Back</string>
+       </property>
+       <property name="accessibleDescription">
+        <string>Go back</string>
+       </property>
+       <property name="shortcut">
+        <string>Alt+Left</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QSplitter" name="splitter">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <widget class="QTreeView" name="tvNavigation">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="headerHidden">
+       <bool>true</bool>
+      </property>
+      <attribute name="headerVisible">
+       <bool>false</bool>
+      </attribute>
+     </widget>
+     <widget class="QStackedWidget" name="stackedWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="pageFiles">
+       <layout class="QGridLayout" name="gridLayout_3">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="QTreeView" name="tvFiles">
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
+          <property name="itemsExpandable">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="pageFilteredFiles">
+       <layout class="QGridLayout" name="gridLayout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="QTreeView" name="tvFilteredFiles">
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
+          <property name="headerHidden">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
