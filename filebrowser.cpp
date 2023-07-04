@@ -289,7 +289,7 @@ void FileBrowser::filterFile(QVector<QString> vtLabels, bool isAnd)
                 sUnionSelect = QString("%1 union %2").arg(sUnionSelect).arg(sSelect);
             }
         }
-        sSql = QString("select filepath from (%1) group by(filepath) having count(filepath)>1").arg(sUnionSelect);
+        sSql = QString("select filepath from (%1) group by(filepath) having count(filepath)=%2").arg(sUnionSelect).arg(vtLabels.count());
     }
     else
     {
@@ -303,10 +303,10 @@ void FileBrowser::filterFile(QVector<QString> vtLabels, bool isAnd)
             }
             else
             {
-                sWhere = QString("%1 or %2");
+                sWhere = QString("%1 or %2").arg(sWhere).arg(sCondition);
             }
         }
-        sSql = QString("select * from filewithlabels where %1").arg(sWhere);
+        sSql = QString("select filepath from filewithlabels where %1 group by(filepath)").arg(sWhere);
     }
     updateFilterFile(sSql);
 }
